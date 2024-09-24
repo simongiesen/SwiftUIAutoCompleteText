@@ -2,6 +2,7 @@ Hier ist ein einfaches Beispiel für eine ContentView, in der die AutoCompleteTe
 
 In dieser Ansicht werden einige Beispielvorschläge angezeigt, und sobald ein Vorschlag ausgewählt wird, wird der ausgewählte Text in der Benutzeroberfläche dargestellt.
 
+´´
 import SwiftUI
 struct ContentView: View {
     @State private var selectedSuggestion: String = ""
@@ -38,3 +39,4 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+´´
