@@ -1,0 +1,62 @@
+// Simon Giesen, 24.09.24, Apache MIT License
+
+import SwiftUI
+
+struct AutoCompleteTextField: View {
+    @State private var searchText = ""
+    @State private var filteredSuggestions: [String] = []
+    
+    var suggestions: [String]
+    var onSelect: (String) -> Void = { _ in }
+    var maxSuggestions: Int = 3
+    var autoCompleteCellHeight: CGFloat = 44.0
+    
+    var body: some View {
+        VStack {
+            TextField("Search", text: $searchText, onEditingChanged: { _ in
+                filterSuggestions()
+            })
+            .padding(8) // Add padding inside the TextField
+            .background(Color.white) // Set background color
+            .overlay(
+                RoundedRectangle(cornerRadius: 0) // No rounded corners
+                    .stroke(Color.gray, lineWidth: 1) // Simple gray border
+            )
+            .padding([.leading, .trailing], 10)
+            
+            if !filteredSuggestions.isEmpty {
+                List(filteredSuggestions.prefix(maxSuggestions), id: \.self) { suggestion in
+                    Text(suggestion)
+                        .onTapGesture {
+                            searchText = suggestion
+                            onSelect(suggestion)
+                            hideSuggestions()
+                        }
+                        .frame(height: autoCompleteCellHeight)
+                }
+                .listStyle(PlainListStyle())
+                .frame(maxHeight: CGFloat(filteredSuggestions.count) * autoCompleteCellHeight)
+            }
+        }
+    }
+    
+    private func filterSuggestions() {
+        if searchText.isEmpty {
+            hideSuggestions()
+        } else {
+            filteredSuggestions = suggestions.filter { $0.lowercased().contains(searchText.lowercased()) }
+        }
+    }
+    
+    private func hideSuggestions() {
+        filteredSuggestions.removeAll()
+    }
+}
+
+struct AutoCompleteTextField_Previews: PreviewProvider {
+    static var previews: some View {
+        AutoCompleteTextField(suggestions: ["Apple", "Banana", "Orange", "Peach", "Grape"]) { selected in
+            print("Selected: \(selected)")
+        }
+    }
+}
