@@ -38,25 +38,25 @@ struct AutoCompleteTextField: View {
                 .frame(maxHeight: CGFloat(filteredSuggestions.count) * autoCompleteCellHeight)
             }
         }
+        .onChange(of: searchText) { _ in
+            filterSuggestions()
+        }
     }
     
+    // Filter suggestions based on the search text
     private func filterSuggestions() {
         if searchText.isEmpty {
-            hideSuggestions()
+            filteredSuggestions = []
         } else {
-            filteredSuggestions = suggestions.filter { $0.lowercased().contains(searchText.lowercased()) }
+            filteredSuggestions = suggestions.filter {
+                $0.lowercased().contains(searchText.lowercased())
+            }
         }
+        print(filteredSuggestions)
     }
     
+    // Hide suggestions when an item is selected
     private func hideSuggestions() {
-        filteredSuggestions.removeAll()
-    }
-}
-
-struct AutoCompleteTextField_Previews: PreviewProvider {
-    static var previews: some View {
-        AutoCompleteTextField(suggestions: ["Apple", "Banana", "Orange", "Peach", "Grape"]) { selected in
-            print("Selected: \(selected)")
-        }
+        filteredSuggestions = []
     }
 }
