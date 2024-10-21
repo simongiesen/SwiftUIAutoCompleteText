@@ -1,0 +1,41 @@
+import SwiftUI
+
+struct AutoCompleteTextView: View {
+    @State private var text: String = ""
+    
+    let allSuggestions = [
+        "Apple", "Banana", "Cherry", "Date", "Grape", "Mango", "Orange", "Peach", "Strawberry"
+    ]
+    
+    var body: some View {
+        VStack {
+            TextField("Type something...", text: $text, onEditingChanged: { _ in
+                completeText()
+            })
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(8)
+                .padding(.horizontal)
+            
+            Spacer()
+        }
+        .padding()
+    }
+    
+    // Function to auto-complete the text
+    private func completeText() {
+        // Find matching suggestion
+        if let match = allSuggestions.first(where: { $0.lowercased().hasPrefix(text.lowercased()) }) {
+            // Auto-complete the text with the matched suggestion
+            if !text.isEmpty && match.lowercased() != text.lowercased() {
+                text = match
+            }
+        }
+    }
+}
+
+struct AutoCompleteTextView_Previews: PreviewProvider {
+    static var previews: some View {
+        AutoCompleteTextView()
+    }
+}
